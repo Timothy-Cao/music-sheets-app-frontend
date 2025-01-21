@@ -54,7 +54,7 @@ function App() {
               }}
             >
               <Box sx={{ padding: 2 }}>
-                <Typography variant="h2" gutterBottom>
+                <Typography variant="h2" gutterBottom sx={{ textAlign: "center" , marginTop: 2}}>
                   Music Sheets
                 </Typography>
                 <Box

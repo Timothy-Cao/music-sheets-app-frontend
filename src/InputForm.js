@@ -56,21 +56,22 @@ const InputForm = () => {
   };
 
   return (
-    <Box
-      component="form"
-      onSubmit={handleSubmit}
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        gap: 3,
-        padding: 3,
-        maxWidth: 500,
-        margin: "auto",
-        backgroundColor: theme.palette.background.paper,
-        boxShadow: theme.shadows[3],
-        borderRadius: 2,
-      }}
-    >
+        <Box
+        component="form"
+        onSubmit={handleSubmit}
+        sx={{
+            display: "flex",
+            flexDirection: "column",
+            gap: 3,
+            padding: 3,
+            maxWidth: 500,
+            margin: "auto",
+            backgroundColor: theme.palette.background.default, // Use secondary color
+            boxShadow: theme.shadows[3],
+            borderRadius: 2,
+        }}
+        >
+
       <Typography
         variant="h4"
         gutterBottom
