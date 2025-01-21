@@ -1,20 +1,14 @@
 import React, { useState } from "react";
-import {
-  TextField,
-  Button,
-  Checkbox,
-  FormControlLabel,
-  Box,
-  Typography,
-  useTheme,
-} from "@mui/material";
+import { TextField, Button, Checkbox, FormControlLabel, Box, Typography, useTheme, } from "@mui/material";
 import { UploadFileOutlined } from "@mui/icons-material";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { db, storage } from "./firebase";
+import { db, storage, auth } from "./firebase";
+import { useAuthState } from "react-firebase-hooks/auth"; 
 
 const InputForm = () => {
-  const theme = useTheme(); // Access the current theme
+  const theme = useTheme();
+  const [user] = useAuthState(auth); // Hook to get the current user
   const [formData, setFormData] = useState({
     title: "",
     artist: "",
@@ -50,7 +44,8 @@ const InputForm = () => {
       await addDoc(collection(db, "musicSheets"), {
         ...formData,
         fileUrl,
-        timestamp: serverTimestamp(),
+        timestamp: serverTimestamp(), // Add upload timestamp
+        uploadedBy: user?.displayName || "Anonymous", // Add uploader's name
       });
 
       setFormData({ title: "", artist: "", description: "", isStarred: false });
@@ -71,15 +66,15 @@ const InputForm = () => {
         padding: 3,
         maxWidth: 500,
         margin: "auto",
-        backgroundColor: theme.palette.background.paper, 
-        boxShadow: theme.shadows[3], 
+        backgroundColor: theme.palette.background.paper,
+        boxShadow: theme.shadows[3],
         borderRadius: 2,
       }}
     >
       <Typography
         variant="h4"
         gutterBottom
-        sx={{ color: theme.palette.text.primary }} 
+        sx={{ color: theme.palette.text.primary }}
       >
         Upload sheets
       </Typography>
