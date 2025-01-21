@@ -20,14 +20,20 @@ const DisplayEntries = () => {
 
   const fetchEntries = async () => {
     try {
-      const q = query(collection(db, "musicSheets"), orderBy("isStarred", "desc"), limit(20));
+      const q = query(
+        collection(db, "musicSheets"),
+        orderBy("isStarred", "desc"),
+        orderBy("title", "asc"), // 2ndary order by title
+        limit(20)
+      );
       const querySnapshot = await getDocs(q);
       const fetchedEntries = querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
       setEntries(fetchedEntries);
     } catch (error) {
-      console.error("Error fetching entries: ", error);
+      console.error("Error fetching entries: ", error.message);
     }
   };
+  
 
   useEffect(() => {
     fetchEntries();
@@ -39,13 +45,15 @@ const DisplayEntries = () => {
 
   return (
     <Box sx={{ padding: 2 }}>
-      <TextField
-        label="Search"
-        fullWidth
-        value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
-      />
-      <Button onClick={handleSearch} variant="contained" sx={{ marginTop: 2 }}>Search</Button>
+      <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, marginBottom: 2 }}>
+        <Button onClick={handleSearch} variant="contained">Refresh</Button>
+        <TextField
+          label="Search"
+          fullWidth
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+      </Box>
       <List>
         {entries
           .filter((entry) =>
