@@ -1,5 +1,15 @@
 import React, { useState, useEffect } from "react";
-import { Box, TextField, Button, Typography, List, ListItem, ListItemText, ListItemIcon } from "@mui/material";
+import {
+  Box,
+  TextField,
+  Button,
+  Typography,
+  List,
+  ListItem,
+  ListItemText,
+  ListItemIcon,
+  Link,
+} from "@mui/material";
 import StarIcon from "@mui/icons-material/Star";
 import { collection, query, orderBy, limit, getDocs } from "firebase/firestore";
 import { db } from "./firebase";
@@ -39,7 +49,7 @@ const DisplayEntries = () => {
       <List>
         {entries
           .filter((entry) =>
-            ["title", "artist", "fileLink", "description"].some((field) =>
+            ["title", "artist", "description"].some((field) =>
               entry[field]?.toLowerCase().includes(searchTerm.toLowerCase())
             )
           )
@@ -48,7 +58,15 @@ const DisplayEntries = () => {
               <ListItemIcon>{entry.isStarred && <StarIcon sx={{ color: "gold" }} />}</ListItemIcon>
               <ListItemText
                 primary={`${entry.title} - ${entry.artist}`}
-                secondary={entry.description || "No description provided."}
+                secondary={
+                  <>
+                    {entry.description || "No description provided."}
+                    <br />
+                    <Link href={entry.fileUrl} target="_blank" rel="noopener">
+                      View PDF
+                    </Link>
+                  </>
+                }
               />
             </ListItem>
           ))}
