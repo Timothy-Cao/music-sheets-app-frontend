@@ -49,7 +49,7 @@ function App() {
                 backgroundColor: "background.paper",
                 borderRight: "1px solid",
                 borderColor: "divider",
-                overflowY: "auto", // Make the left side scrollable
+                overflowY: "auto",
                 height: "100vh",
               }}
             >
@@ -88,13 +88,16 @@ function App() {
                 </Box>
                 <InputForm />
                 <SignOutButton />
+                <Typography variant="subtitle1" gutterBottom sx={{ textAlign: "center", marginTop : 2}}>
+                  Tim Cao Sheets
+                </Typography>
               </Box>
             </Grid>
             <Grid
               item
               xs={9}
               sx={{
-                overflowY: "auto", // Make the right side scrollable
+                overflowY: "auto", 
                 height: "100vh",
               }}
             >
