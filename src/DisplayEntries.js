@@ -9,13 +9,17 @@ import {
   ListItemText,
   Link,
   IconButton,
+  Card,
+  CardContent,
+  CardActions,
+  Grid,
 } from "@mui/material";
 import StarIcon from "@mui/icons-material/Star";
 import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
 import { collection, query, orderBy, limit, getDocs } from "firebase/firestore";
 import { db } from "./firebase";
 
-const DisplayEntries = () => {
+const DisplayEntries = ({ isSmallScreen }) => {
   const [entries, setEntries] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -25,6 +29,7 @@ const DisplayEntries = () => {
         collection(db, "musicSheets"),
         orderBy("isStarred", "desc"),
         orderBy("title", "asc"),
+        limit(20)
       );
       const querySnapshot = await getDocs(q);
       const fetchedEntries = querySnapshot.docs.map((doc) => ({
@@ -58,7 +63,7 @@ const DisplayEntries = () => {
           onChange={(e) => setSearchTerm(e.target.value)}
         />
       </Box>
-      <List>
+      <Grid container spacing={2}>
         {entries
           .filter((entry) =>
             ["title", "artist", "description"].some((field) =>
@@ -66,63 +71,59 @@ const DisplayEntries = () => {
             )
           )
           .map((entry) => (
-            <ListItem
-              key={entry.id}
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-              }}
-            >
-              <Box sx={{ display: "flex", alignItems: "center", gap: 2, flex: 1 }}>
-                {entry.isStarred && <StarIcon sx={{ color: "gold", fontSize: 28 }} />}
-                
-                <ListItemText
-                  primary={
+            <Grid item xs={12} sm={6} md={4} key={entry.id}>
+              <Card
+                sx={{
+                  height: "100%",
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "space-between",
+                }}
+              >
+                <CardContent>
+                  <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+                    {entry.isStarred && <StarIcon sx={{ color: "gold", fontSize: 28 }} />}
                     <Typography variant="h6" sx={{ fontWeight: "bold" }}>
-                      {entry.title} - {entry.artist}
+                      {entry.title}
                     </Typography>
-                  }
-                  secondary={
-                    <Typography variant="body2" sx={{ color: "text.secondary" }}>
-                      {entry.description || "No description"}
+                  </Box>
+                  <Typography variant="subtitle1" sx={{ color: "text.secondary", marginTop: 1 }}>
+                    by {entry.artist}
+                  </Typography>
+                  <Typography variant="body2" sx={{ color: "text.secondary", marginTop: 1 }}>
+                    {entry.description || "No description"}
+                  </Typography>
+                </CardContent>
+                <CardActions sx={{ justifyContent: "space-between", padding: 2 }}>
+                  <Box>
+                    <Typography variant="body2">
+                      Uploaded by: {entry.uploadedBy || "Guest"}
                     </Typography>
-                  }
-                />
-              </Box>
-
-              <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-
-                <Box sx={{ textAlign: "right" }}>
-                  <Typography variant="body2">
-                    Uploaded by: {entry.uploadedBy || "Guest"}
+                    <Typography variant="body2">
+                      {entry.timestamp?.toDate
+                        ? new Date(entry.timestamp.toDate()).toLocaleDateString()
+                        : "Unknown Date"}
+                    </Typography>
+                  </Box>
+                  <Typography variant="body2" sx={{ color: "text.secondary" }}>
+                    {entry.numPages || "?"} pages
                   </Typography>
-                  <Typography variant="body2">
-                    {entry.timestamp?.toDate
-                      ? new Date(entry.timestamp.toDate()).toLocaleDateString()
-                      : "Unknown Date"}
-                  </Typography>
-                </Box>
-                
-                <Typography variant="body2" sx={{ color: "text.secondary" }}>
-                  {entry.numPages || "?"} pages
-                </Typography>
-                
-                <IconButton
-                  component={Link}
-                  href={entry.fileUrl}
-                  target="_blank"
-                  rel="noopener"
-                  color="primary"
-                  size="large"
-                  aria-label="View PDF"
-                >
-                  <PictureAsPdfIcon sx={{ fontSize: 36 }} />
-                </IconButton>
-              </Box>
-            </ListItem>
+                  <IconButton
+                    component={Link}
+                    href={entry.fileUrl}
+                    target="_blank"
+                    rel="noopener"
+                    color="primary"
+                    size="large"
+                    aria-label="View PDF"
+                  >
+                    <PictureAsPdfIcon sx={{ fontSize: 36 }} />
+                  </IconButton>
+                </CardActions>
+              </Card>
+            </Grid>
           ))}
-      </List>
+      </Grid>
     </Box>
   );
 };

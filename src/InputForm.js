@@ -19,12 +19,10 @@ const InputForm = () => {
   const [file, setFile] = useState(null);
   const [pdfjsLib, setPdfjsLib] = useState(null);
 
-  // Load pdfjs-dist from a CDN
   useEffect(() => {
     const script = document.createElement("script");
     script.src = "https://cdn.jsdelivr.net/npm/pdfjs-dist@2.16.105/build/pdf.min.js";
     script.onload = () => {
-      // Set the worker source to the CDN URL
       window.pdfjsLib.GlobalWorkerOptions.workerSrc =
         "https://cdn.jsdelivr.net/npm/pdfjs-dist@2.16.105/build/pdf.worker.min.js";
       setPdfjsLib(window.pdfjsLib);
