@@ -25,7 +25,6 @@ const DisplayEntries = () => {
         collection(db, "musicSheets"),
         orderBy("isStarred", "desc"),
         orderBy("title", "asc"),
-        limit(20)
       );
       const querySnapshot = await getDocs(q);
       const fetchedEntries = querySnapshot.docs.map((doc) => ({
@@ -76,10 +75,8 @@ const DisplayEntries = () => {
               }}
             >
               <Box sx={{ display: "flex", alignItems: "center", gap: 2, flex: 1 }}>
-                {/* Star Icon */}
                 {entry.isStarred && <StarIcon sx={{ color: "gold", fontSize: 28 }} />}
                 
-                {/* Title and Artist */}
                 <ListItemText
                   primary={
                     <Typography variant="h6" sx={{ fontWeight: "bold" }}>
@@ -94,8 +91,8 @@ const DisplayEntries = () => {
                 />
               </Box>
 
-              {/* PDF Icon and Uploader Info */}
               <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+
                 <Box sx={{ textAlign: "right" }}>
                   <Typography variant="body2">
                     Uploaded by: {entry.uploadedBy || "Guest"}
@@ -106,6 +103,10 @@ const DisplayEntries = () => {
                       : "Unknown Date"}
                   </Typography>
                 </Box>
+                
+                <Typography variant="body2" sx={{ color: "text.secondary" }}>
+                  {entry.numPages || "?"} pages
+                </Typography>
                 
                 <IconButton
                   component={Link}
